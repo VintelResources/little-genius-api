@@ -11,6 +11,7 @@ export default defineConfig({
       refresh: true,
     }),
     react(),
+        wayfinder({ form: true }),
     wayfinder({
       form: true,
     }),
@@ -21,3 +22,4 @@ export default defineConfig({
     },
   },
 });
+
