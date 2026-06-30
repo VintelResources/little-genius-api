@@ -1,52 +1,57 @@
-import { Head } from '@inertiajs/react';
-import { useState } from 'react';
-import PendingInvitationsModal from '@/components/pending-invitations-modal';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
-import { dashboard } from '@/routes';
-import type { DashboardInvitation } from '@/types';
+﻿import { Head, Link } from "@inertiajs/react";
 
-type Props = {
-    pendingInvitations?: DashboardInvitation[];
-};
-
-export default function Dashboard({ pendingInvitations = [] }: Props) {
-    const [showInvitations, setShowInvitations] = useState(
-        pendingInvitations.length > 0,
-    );
-
+export default function Dashboard() {
     return (
         <>
             <Head title="Dashboard" />
-            <PendingInvitationsModal
-                invitations={pendingInvitations}
-                open={pendingInvitations.length > 0 && showInvitations}
-                onOpenChange={setShowInvitations}
-            />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+
+            <main className="min-h-screen bg-white px-6 py-12 text-slate-900">
+                <div className="mx-auto max-w-5xl">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm font-semibold text-indigo-600">
+                                Little Genius
+                            </p>
+                            <h1 className="mt-2 text-4xl font-bold">
+                                Welcome to your dashboard
+                            </h1>
+                            <p className="mt-3 text-slate-600">
+                                Your learning space is ready.
+                            </p>
+                        </div>
+
+                        <Link
+                            href="/"
+                            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold"
+                        >
+                            Home
+                        </Link>
                     </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
+
+                    <section className="mt-10 grid gap-5 md:grid-cols-3">
+                        <article className="rounded-xl border border-slate-200 p-6">
+                            <h2 className="font-bold">AI Tutor</h2>
+                            <p className="mt-2 text-sm text-slate-600">
+                                Ask questions and learn step by step.
+                            </p>
+                        </article>
+
+                        <article className="rounded-xl border border-slate-200 p-6">
+                            <h2 className="font-bold">Trivia</h2>
+                            <p className="mt-2 text-sm text-slate-600">
+                                Test your knowledge and earn progress.
+                            </p>
+                        </article>
+
+                        <article className="rounded-xl border border-slate-200 p-6">
+                            <h2 className="font-bold">Languages</h2>
+                            <p className="mt-2 text-sm text-slate-600">
+                                Practice new languages with guided lessons.
+                            </p>
+                        </article>
+                    </section>
                 </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
-            </div>
+            </main>
         </>
     );
 }
-
-Dashboard.layout = (props: { currentTeam?: { slug: string } | null }) => ({
-    breadcrumbs: [
-        {
-            title: 'Dashboard',
-            href: props.currentTeam ? dashboard(props.currentTeam.slug) : '/',
-        },
-    ],
-});
