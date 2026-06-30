@@ -1,143 +1,105 @@
-import { Form, Head } from '@inertiajs/react';
-import InputError from '@/components/input-error';
-import PasswordInput from '@/components/password-input';
-import TeamInvitationAlert from '@/components/team-invitation-alert';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { login } from '@/routes';
-import { store } from '@/routes/register';
-import type { TeamInvitationContext } from '@/types';
+﻿import { FormEventHandler } from "react";
+import { Head, Link, useForm } from "@inertiajs/react";
 
-type Props = {
-    passwordRules: string;
-    teamInvitation?: TeamInvitationContext | null;
-};
+export default function Register() {
+    const { data, setData, post, processing, errors, reset } = useForm({
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+    });
 
-export default function Register({ passwordRules, teamInvitation }: Props) {
+    const submit: FormEventHandler = (event) => {
+        event.preventDefault();
+
+        post("/register", {
+            onFinish: () => reset("password", "password_confirmation"),
+        });
+    };
+
     return (
         <>
-            <Head title="Register" />
-            <Form
-                {...store.form()}
-                resetOnSuccess={['password', 'password_confirmation']}
-                disableWhileProcessing
-                className="flex flex-col gap-6"
-            >
-                {({ processing, errors }) => (
-                    <>
-                        {teamInvitation && (
-                            <TeamInvitationAlert
-                                invitation={teamInvitation}
-                                action="Register"
+            <Head title="Create Account" />
+
+            <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 py-12 text-white">
+                <section className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-xl">
+                    <Link href="/" className="text-sm font-semibold text-cyan-300">
+                        ← Little Genius
+                    </Link>
+
+                    <h1 className="mt-6 text-3xl font-black">Create your account</h1>
+                    <p className="mt-2 text-slate-400">
+                        Start learning, playing, and growing.
+                    </p>
+
+                    <form onSubmit={submit} className="mt-8 space-y-5">
+                        <label className="block">
+                            <span className="mb-2 block text-sm font-medium">Full name</span>
+                            <input
+                                value={data.name}
+                                onChange={(event) => setData("name", event.target.value)}
+                                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-cyan-300"
+                                autoComplete="name"
+                                required
                             />
-                        )}
+                            {errors.name && <p className="mt-1 text-sm text-red-400">{errors.name}</p>}
+                        </label>
 
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
-                                <Input
-                                    id="name"
-                                    type="text"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="name"
-                                    name="name"
-                                    placeholder="Full name"
-                                />
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-2"
-                                />
-                            </div>
+                        <label className="block">
+                            <span className="mb-2 block text-sm font-medium">Email address</span>
+                            <input
+                                type="email"
+                                value={data.email}
+                                onChange={(event) => setData("email", event.target.value)}
+                                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-cyan-300"
+                                autoComplete="email"
+                                required
+                            />
+                            {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
+                        </label>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="email"
-                                    name="email"
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
+                        <label className="block">
+                            <span className="mb-2 block text-sm font-medium">Password</span>
+                            <input
+                                type="password"
+                                value={data.password}
+                                onChange={(event) => setData("password", event.target.value)}
+                                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-cyan-300"
+                                autoComplete="new-password"
+                                required
+                            />
+                            {errors.password && <p className="mt-1 text-sm text-red-400">{errors.password}</p>}
+                        </label>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">Password</Label>
-                                <PasswordInput
-                                    id="password"
-                                    required
-                                    tabIndex={3}
-                                    autoComplete="new-password"
-                                    name="password"
-                                    placeholder="Password"
-                                    passwordrules={passwordRules}
-                                />
-                                <InputError message={errors.password} />
-                            </div>
+                        <label className="block">
+                            <span className="mb-2 block text-sm font-medium">Confirm password</span>
+                            <input
+                                type="password"
+                                value={data.password_confirmation}
+                                onChange={(event) => setData("password_confirmation", event.target.value)}
+                                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-cyan-300"
+                                autoComplete="new-password"
+                                required
+                            />
+                        </label>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
-                                    Confirm password
-                                </Label>
-                                <PasswordInput
-                                    id="password_confirmation"
-                                    required
-                                    tabIndex={4}
-                                    autoComplete="new-password"
-                                    name="password_confirmation"
-                                    placeholder="Confirm password"
-                                    passwordrules={passwordRules}
-                                />
-                                <InputError
-                                    message={errors.password_confirmation}
-                                />
-                            </div>
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="w-full rounded-xl bg-cyan-400 px-5 py-3 font-bold text-slate-950 disabled:opacity-60"
+                        >
+                            {processing ? "Creating account..." : "Create Account"}
+                        </button>
+                    </form>
 
-                            <Button
-                                type="submit"
-                                className="mt-2 w-full"
-                                tabIndex={5}
-                                data-test="register-user-button"
-                            >
-                                {processing && <Spinner />}
-                                Create account
-                            </Button>
-                        </div>
-
-                        <div className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <TextLink
-                                href={
-                                    teamInvitation
-                                        ? login.url({
-                                              query: {
-                                                  invitation:
-                                                      teamInvitation.code,
-                                              },
-                                          })
-                                        : login()
-                                }
-                                data-test="team-invitation-login-link"
-                                tabIndex={6}
-                            >
-                                Log in
-                            </TextLink>
-                        </div>
-                    </>
-                )}
-            </Form>
+                    <p className="mt-6 text-center text-sm text-slate-400">
+                        Already registered?{" "}
+                        <Link href="/login" className="font-semibold text-cyan-300">
+                            Log in
+                        </Link>
+                    </p>
+                </section>
+            </main>
         </>
     );
 }
-
-Register.layout = {
-    title: 'Create an account',
-    description: 'Enter your details below to create your account',
-};
