@@ -1,89 +1,139 @@
-﻿import { FormEventHandler } from "react";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Form, Head } from '@inertiajs/react';
+import InputError from '@/components/input-error';
+import PasskeyVerify from '@/components/passkey-verify';
+import PasswordInput from '@/components/password-input';
+import TeamInvitationAlert from '@/components/team-invitation-alert';
+import TextLink from '@/components/text-link';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
+import { register } from '@/routes';
+import { store } from '@/routes/login';
+import { request } from '@/routes/password';
+import type { TeamInvitationContext } from '@/types';
 
-export default function Login() {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        email: "",
-        password: "",
-        remember: false,
-    });
+type Props = {
+    status?: string;
+    canResetPassword: boolean;
+    teamInvitation?: TeamInvitationContext | null;
+};
 
-    const submit: FormEventHandler = (event) => {
-        event.preventDefault();
-
-        post("/login", {
-            onFinish: () => reset("password"),
-        });
-    };
-
+export default function Login({
+    status,
+    canResetPassword,
+    teamInvitation,
+}: Props) {
     return (
         <>
-            <Head title="Log In" />
+            <Head title="Log in" />
 
-            <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 py-12 text-white">
-                <section className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-xl">
-                    <Link href="/" className="text-sm font-semibold text-cyan-300">
-                        ← Little Genius
-                    </Link>
+            {teamInvitation && (
+                <TeamInvitationAlert
+                    invitation={teamInvitation}
+                    action="Log in"
+                />
+            )}
 
-                    <h1 className="mt-6 text-3xl font-black">Welcome back</h1>
-                    <p className="mt-2 text-slate-400">
-                        Log in and continue your learning journey.
-                    </p>
+            <PasskeyVerify />
 
-                    <form onSubmit={submit} className="mt-8 space-y-5">
-                        <label className="block">
-                            <span className="mb-2 block text-sm font-medium">Email address</span>
-                            <input
-                                type="email"
-                                value={data.email}
-                                onChange={(event) => setData("email", event.target.value)}
-                                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-cyan-300"
-                                autoComplete="email"
-                                required
-                            />
-                            {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
-                        </label>
+            <Form
+                {...store.form()}
+                resetOnSuccess={['password']}
+                className="flex flex-col gap-6"
+            >
+                {({ processing, errors }) => (
+                    <>
+                        <div className="grid gap-6">
+                            <div className="grid gap-2">
+                                <Label htmlFor="email">Email address</Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    required
+                                    autoFocus
+                                    tabIndex={1}
+                                    autoComplete="email"
+                                    placeholder="email@example.com"
+                                />
+                                <InputError message={errors.email} />
+                            </div>
 
-                        <label className="block">
-                            <span className="mb-2 block text-sm font-medium">Password</span>
-                            <input
-                                type="password"
-                                value={data.password}
-                                onChange={(event) => setData("password", event.target.value)}
-                                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none focus:border-cyan-300"
-                                autoComplete="current-password"
-                                required
-                            />
-                            {errors.password && <p className="mt-1 text-sm text-red-400">{errors.password}</p>}
-                        </label>
+                            <div className="grid gap-2">
+                                <div className="flex items-center">
+                                    <Label htmlFor="password">Password</Label>
+                                    {canResetPassword && (
+                                        <TextLink
+                                            href={request()}
+                                            className="ml-auto text-sm"
+                                            tabIndex={5}
+                                        >
+                                            Forgot password?
+                                        </TextLink>
+                                    )}
+                                </div>
+                                <PasswordInput
+                                    id="password"
+                                    name="password"
+                                    required
+                                    tabIndex={2}
+                                    autoComplete="current-password"
+                                    placeholder="Password"
+                                />
+                                <InputError message={errors.password} />
+                            </div>
 
-                        <label className="flex items-center gap-2 text-sm text-slate-300">
-                            <input
-                                type="checkbox"
-                                checked={data.remember}
-                                onChange={(event) => setData("remember", event.target.checked)}
-                            />
-                            Keep me logged in
-                        </label>
+                            <div className="flex items-center space-x-3">
+                                <Checkbox
+                                    id="remember"
+                                    name="remember"
+                                    tabIndex={3}
+                                />
+                                <Label htmlFor="remember">Remember me</Label>
+                            </div>
 
-                        <button
-                            type="submit"
-                            disabled={processing}
-                            className="w-full rounded-xl bg-cyan-400 px-5 py-3 font-bold text-slate-950 disabled:opacity-60"
-                        >
-                            {processing ? "Logging in..." : "Log In"}
-                        </button>
-                    </form>
+                            <Button
+                                type="submit"
+                                className="mt-4 w-full"
+                                tabIndex={4}
+                                disabled={processing}
+                                data-test="login-button"
+                            >
+                                {processing && <Spinner />}
+                                Log in
+                            </Button>
+                        </div>
 
-                    <p className="mt-6 text-center text-sm text-slate-400">
-                        New to Little Genius?{" "}
-                        <Link href="/register" className="font-semibold text-cyan-300">
-                            Create an account
-                        </Link>
-                    </p>
-                </section>
-            </main>
+                        <div className="text-center text-sm text-muted-foreground">
+                            Don't have an account?{' '}
+                            <TextLink
+                                href={register({
+                                    query: {
+                                        invitation: teamInvitation?.code,
+                                    },
+                                })}
+                                data-test="register-link"
+                                tabIndex={5}
+                            >
+                                Sign up
+                            </TextLink>
+                        </div>
+                    </>
+                )}
+            </Form>
+
+            {status && (
+                <div className="mb-4 text-center text-sm font-medium text-green-600">
+                    {status}
+                </div>
+            )}
         </>
     );
 }
+
+Login.layout = {
+    title: 'Log in to your account',
+    description: 'Enter your email and password below to log in',
+};
