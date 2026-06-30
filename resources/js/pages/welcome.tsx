@@ -1,231 +1,434 @@
 ﻿import { Head, Link } from "@inertiajs/react";
+import { useState } from "react";
 
-const features = [
-    {
-        icon: "✦",
-        title: "AI Learning Coach",
-        text: "Ask questions, get clear explanations, and learn at your own pace.",
-    },
-    {
-        icon: "◉",
-        title: "Smart Trivia",
-        text: "Challenge yourself with fun quizzes across subjects and levels.",
-    },
-    {
-        icon: "◎",
-        title: "Language Studio",
-        text: "Practice languages with guided lessons, voice, and instant feedback.",
-    },
-];
-
-const learningPaths = [
-    "Early Learning",
-    "Primary School",
-    "Secondary School",
-    "Tertiary & Skills",
+const niches = [
+    { title: "General Knowledge", icon: "✦", description: "Everyday facts and broad knowledge challenges." },
+    { title: "Science & Nature", icon: "◌", description: "Biology, physics, chemistry, and the natural world." },
+    { title: "History & Geography", icon: "◈", description: "Important people, places, and events." },
+    { title: "Toddler Fun", icon: "★", description: "Simple playful learning for young children." },
+    { title: "Language & Arts", icon: "Aa", description: "Words, sounds, reading, and creativity." },
+    { title: "Technology & Space", icon: "◉", description: "Computers, innovation, planets, and beyond." },
 ];
 
 export default function Welcome() {
+    const [selectedNiche, setSelectedNiche] = useState<string | null>(null);
+
     return (
         <>
-            <Head title="Little Genius" />
+            <Head title="Little Genius | Discovery Trivia" />
 
-            <main className="min-h-screen overflow-hidden bg-slate-950 text-white">
-                <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                    <div className="absolute left-[-10rem] top-[-8rem] h-80 w-80 rounded-full bg-cyan-400/15 blur-3xl" />
-                    <div className="absolute right-[-8rem] top-40 h-96 w-96 rounded-full bg-indigo-500/20 blur-3xl" />
-                    <div className="absolute bottom-[-12rem] left-1/3 h-96 w-96 rounded-full bg-fuchsia-500/10 blur-3xl" />
-                </div>
+            <style>{`
+                * { box-sizing: border-box; }
 
-                <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-8">
-                    <Link href="/" className="flex items-center gap-3">
-                        <div className="grid h-10 w-10 place-items-center rounded-xl bg-cyan-300 text-lg font-black text-slate-950 shadow-lg shadow-cyan-400/20">
-                            G
-                        </div>
-                        <div>
-                            <p className="text-lg font-black tracking-tight">Little Genius</p>
-                            <p className="text-xs font-medium text-cyan-200">Learn beyond limits</p>
+                body {
+                    margin: 0;
+                    background: #f4f6fb;
+                    color: #18213a;
+                    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                }
+
+                .lg-shell {
+                    min-height: 100vh;
+                    background:
+                        radial-gradient(circle at 12% 5%, rgba(79, 70, 229, .10), transparent 25rem),
+                        radial-gradient(circle at 85% 12%, rgba(99, 102, 241, .08), transparent 24rem),
+                        #f5f7fc;
+                }
+
+                .lg-header {
+                    position: sticky;
+                    top: 0;
+                    z-index: 20;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 22px;
+                    min-height: 92px;
+                    padding: 16px clamp(20px, 4vw, 64px);
+                    background: rgba(255,255,255,.95);
+                    border-bottom: 1px solid #e7eaf3;
+                    backdrop-filter: blur(16px);
+                }
+
+                .lg-brand {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    color: #16213b;
+                    text-decoration: none;
+                    flex-shrink: 0;
+                }
+
+                .lg-logo {
+                    display: grid;
+                    place-items: center;
+                    width: 42px;
+                    height: 42px;
+                    border-radius: 14px;
+                    color: white;
+                    font-size: 15px;
+                    font-weight: 900;
+                    background: linear-gradient(135deg, #5348ed, #6a55f7);
+                    box-shadow: 0 10px 20px rgba(79,70,229,.22);
+                }
+
+                .lg-brand-name {
+                    display: grid;
+                    line-height: 1.02;
+                    font-weight: 900;
+                    font-size: 17px;
+                    letter-spacing: -.7px;
+                }
+
+                .lg-nav {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: clamp(14px, 2.1vw, 34px);
+                    flex: 1;
+                }
+
+                .lg-nav a {
+                    color: #6d7890;
+                    font-size: 11px;
+                    font-weight: 800;
+                    letter-spacing: .05em;
+                    text-decoration: none;
+                    text-transform: uppercase;
+                    transition: .2s ease;
+                    white-space: nowrap;
+                }
+
+                .lg-nav a:hover { color: #4f46e5; }
+
+                .lg-nav .active {
+                    padding: 11px 18px;
+                    color: white;
+                    border-radius: 12px;
+                    background: linear-gradient(135deg, #594cf0, #493be3);
+                    box-shadow: 0 10px 18px rgba(79,70,229,.20);
+                }
+
+                .lg-user {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+                    flex-shrink: 0;
+                }
+
+                .lg-balance {
+                    min-width: 95px;
+                    padding: 10px 14px;
+                    border: 1px solid #edf0f6;
+                    border-radius: 16px;
+                    background: #fff;
+                    box-shadow: 0 8px 18px rgba(40,53,85,.05);
+                }
+
+                .lg-balance small {
+                    display: block;
+                    color: #8b96aa;
+                    font-size: 9px;
+                    font-weight: 800;
+                    letter-spacing: .1em;
+                }
+
+                .lg-balance strong {
+                    display: block;
+                    margin-top: 3px;
+                    font-size: 17px;
+                    color: #17223e;
+                }
+
+                .lg-auth {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 11px 15px;
+                    border-radius: 12px;
+                    background: #f0efff;
+                    color: #5043e8;
+                    font-size: 12px;
+                    font-weight: 800;
+                    text-decoration: none;
+                }
+
+                .lg-main {
+                    width: min(1120px, calc(100% - 40px));
+                    margin: 0 auto;
+                    padding: 58px 0 90px;
+                }
+
+                .lg-eyebrow {
+                    margin: 0;
+                    color: #9aa5bd;
+                    font-size: 10px;
+                    font-weight: 900;
+                    letter-spacing: .22em;
+                    text-transform: uppercase;
+                }
+
+                .lg-title {
+                    margin: 11px 0 0;
+                    color: #14203a;
+                    font-size: clamp(36px, 5vw, 58px);
+                    font-weight: 900;
+                    letter-spacing: -2.6px;
+                    line-height: 1;
+                }
+
+                .lg-title span { color: #5144ed; }
+
+                .lg-panel {
+                    margin-top: 42px;
+                    padding: clamp(28px, 5vw, 58px);
+                    border: 1px solid #eef0f6;
+                    border-radius: 36px;
+                    background: rgba(255,255,255,.95);
+                    box-shadow: 0 24px 65px rgba(38,49,86,.09);
+                }
+
+                .lg-panel-heading {
+                    text-align: center;
+                }
+
+                .lg-panel-heading h2 {
+                    margin: 0;
+                    color: #17213a;
+                    font-size: clamp(27px, 3vw, 36px);
+                    font-weight: 900;
+                    letter-spacing: -1.2px;
+                }
+
+                .lg-panel-heading p {
+                    margin: 9px 0 0;
+                    color: #71809c;
+                    font-size: 16px;
+                }
+
+                .lg-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                    gap: 16px;
+                    margin-top: 38px;
+                }
+
+                .lg-niche {
+                    width: 100%;
+                    min-height: 124px;
+                    padding: 20px;
+                    text-align: left;
+                    border: 1px solid #e8ecf5;
+                    border-radius: 18px;
+                    background: #f9fbff;
+                    color: #33415c;
+                    cursor: pointer;
+                    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+                }
+
+                .lg-niche:hover {
+                    transform: translateY(-3px);
+                    border-color: #aaa4ff;
+                    background: white;
+                    box-shadow: 0 14px 25px rgba(73,59,227,.10);
+                }
+
+                .lg-niche.selected {
+                    border-color: #584aed;
+                    background: linear-gradient(135deg, #5850ec, #4939df);
+                    color: white;
+                    box-shadow: 0 16px 28px rgba(73,59,227,.25);
+                }
+
+                .lg-niche-top {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 10px;
+                }
+
+                .lg-niche-icon {
+                    display: grid;
+                    place-items: center;
+                    width: 33px;
+                    height: 33px;
+                    border-radius: 10px;
+                    background: #eeefff;
+                    color: #5144ed;
+                    font-size: 15px;
+                    font-weight: 900;
+                }
+
+                .selected .lg-niche-icon {
+                    background: rgba(255,255,255,.18);
+                    color: white;
+                }
+
+                .lg-niche-title {
+                    margin-top: 13px;
+                    font-size: 15px;
+                    font-weight: 850;
+                }
+
+                .lg-niche-text {
+                    margin: 7px 0 0;
+                    color: #7b88a2;
+                    font-size: 12px;
+                    line-height: 1.45;
+                }
+
+                .selected .lg-niche-text { color: rgba(255,255,255,.78); }
+
+                .lg-action-area {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-top: 40px;
+                }
+
+                .lg-selected-label {
+                    min-height: 20px;
+                    margin: 0 0 12px;
+                    color: #64708a;
+                    font-size: 13px;
+                    font-weight: 700;
+                }
+
+                .lg-start {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 13px;
+                    min-width: 280px;
+                    padding: 17px 28px;
+                    border-radius: 18px;
+                    color: white;
+                    font-size: 19px;
+                    font-weight: 900;
+                    text-decoration: none;
+                    background: linear-gradient(135deg, #5749ed, #4637da);
+                    box-shadow: 0 15px 27px rgba(73,59,227,.26);
+                    transition: transform .18s ease, box-shadow .18s ease;
+                }
+
+                .lg-start:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 20px 32px rgba(73,59,227,.31);
+                }
+
+                .lg-start.disabled {
+                    pointer-events: none;
+                    background: #a0a5b4;
+                    box-shadow: none;
+                }
+
+                .lg-footer {
+                    margin-top: 34px;
+                    text-align: center;
+                    color: #9ba6bc;
+                    font-size: 12px;
+                }
+
+                @media (max-width: 1080px) {
+                    .lg-nav { display: none; }
+                }
+
+                @media (max-width: 760px) {
+                    .lg-header { min-height: 76px; padding: 14px 20px; }
+                    .lg-balance { display: none; }
+                    .lg-main { width: min(100% - 28px, 1120px); padding-top: 42px; }
+                    .lg-panel { border-radius: 27px; }
+                    .lg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+                }
+
+                @media (max-width: 480px) {
+                    .lg-brand-name { font-size: 15px; }
+                    .lg-auth { padding: 10px 12px; }
+                    .lg-grid { grid-template-columns: 1fr; }
+                    .lg-start { width: 100%; min-width: 0; }
+                }
+            `}</style>
+
+            <div className="lg-shell">
+                <header className="lg-header">
+                    <Link href="/" className="lg-brand">
+                        <div className="lg-logo">LG</div>
+                        <div className="lg-brand-name">
+                            <span>LITTLE</span>
+                            <span>GENIUS</span>
                         </div>
                     </Link>
 
-                    <nav className="hidden items-center gap-7 text-sm font-medium text-slate-300 md:flex">
-                        <a href="#features" className="transition hover:text-cyan-200">Features</a>
-                        <a href="#paths" className="transition hover:text-cyan-200">Learning Paths</a>
-                        <Link href="/login" className="transition hover:text-cyan-200">Log in</Link>
+                    <nav className="lg-nav">
+                        <a className="active" href="#trivia">Trivia</a>
+                        <a href="#learning">Learning</a>
+                        <a href="#pathways">Pathways</a>
+                        <a href="#exams">Exams</a>
+                        <a href="#wallet">Wallet</a>
+                        <a href="#foundation">Foundation</a>
+                        <a href="#leaderboard">Leaderboard</a>
                     </nav>
 
-                    <Link
-                        href="/register"
-                        className="rounded-xl bg-cyan-300 px-4 py-2.5 text-sm font-bold text-slate-950 shadow-lg shadow-cyan-400/20 transition hover:bg-cyan-200"
-                    >
-                        Get started
-                    </Link>
+                    <div className="lg-user">
+                        <div className="lg-balance">
+                            <small>BALANCE</small>
+                            <strong>0.000 G</strong>
+                        </div>
+                        <Link href="/login" className="lg-auth">Log in</Link>
+                    </div>
                 </header>
 
-                <section className="relative z-10 mx-auto grid max-w-7xl items-center gap-14 px-6 pb-20 pt-14 lg:grid-cols-[1.15fr_.85fr] lg:px-8 lg:pb-28 lg:pt-20">
-                    <div>
-                        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100">
-                            <span className="h-2 w-2 rounded-full bg-cyan-300" />
-                            A smarter way to learn
+                <main id="trivia" className="lg-main">
+                    <p className="lg-eyebrow">Proof of Knowledge</p>
+                    <h1 className="lg-title">
+                        Discovery <span>Trivia</span>
+                    </h1>
+
+                    <section className="lg-panel">
+                        <div className="lg-panel-heading">
+                            <h2>Select a Niche</h2>
+                            <p>Choose a category to begin your trivia challenge.</p>
                         </div>
 
-                        <h1 className="mt-7 max-w-4xl text-5xl font-black leading-[0.98] tracking-tight sm:text-6xl lg:text-7xl">
-                            Learning that feels
-                            <span className="block bg-gradient-to-r from-cyan-200 via-sky-300 to-indigo-300 bg-clip-text text-transparent">
-                                like an adventure.
-                            </span>
-                        </h1>
-
-                        <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
-                            Little Genius brings together AI lessons, interactive trivia,
-                            language learning, and meaningful progress for every learner.
-                        </p>
-
-                        <div className="mt-9 flex flex-wrap gap-4">
-                            <Link
-                                href="/register"
-                                className="rounded-xl bg-cyan-300 px-6 py-3.5 font-bold text-slate-950 shadow-xl shadow-cyan-400/20 transition hover:-translate-y-0.5 hover:bg-cyan-200"
-                            >
-                                Start learning free
-                            </Link>
-
-                            <Link
-                                href="/login"
-                                className="rounded-xl border border-slate-700 bg-slate-900/70 px-6 py-3.5 font-bold text-white transition hover:border-cyan-300 hover:text-cyan-100"
-                            >
-                                Continue learning
-                            </Link>
-                        </div>
-
-                        <div className="mt-11 flex flex-wrap gap-8 text-sm">
-                            <div>
-                                <p className="text-2xl font-black text-cyan-200">AI</p>
-                                <p className="mt-1 text-slate-400">Guided learning help</p>
-                            </div>
-                            <div>
-                                <p className="text-2xl font-black text-cyan-200">24/7</p>
-                                <p className="mt-1 text-slate-400">Learn anytime</p>
-                            </div>
-                            <div>
-                                <p className="text-2xl font-black text-cyan-200">∞</p>
-                                <p className="mt-1 text-slate-400">Curiosity encouraged</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative mx-auto w-full max-w-lg">
-                        <div className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-slate-800/90 to-slate-900/90 p-5 shadow-2xl shadow-black/40 backdrop-blur">
-                            <div className="rounded-[1.5rem] border border-cyan-300/15 bg-slate-950/80 p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-semibold text-cyan-200">Today’s mission</p>
-                                        <h2 className="mt-1 text-2xl font-black">Explore & discover</h2>
-                                    </div>
-                                    <div className="grid h-12 w-12 place-items-center rounded-2xl bg-cyan-300 text-xl text-slate-950">
-                                        ✦
-                                    </div>
-                                </div>
-
-                                <div className="mt-7 rounded-2xl border border-slate-700 bg-slate-900 p-5">
-                                    <div className="flex items-center justify-between text-sm">
-                                        <span className="font-semibold text-slate-200">Learning progress</span>
-                                        <span className="font-bold text-cyan-200">75%</span>
-                                    </div>
-                                    <div className="mt-3 h-3 overflow-hidden rounded-full bg-slate-800">
-                                        <div className="h-full w-3/4 rounded-full bg-gradient-to-r from-cyan-300 to-indigo-400" />
-                                    </div>
-                                    <p className="mt-4 text-sm leading-6 text-slate-400">
-                                        Complete your next activity to keep your learning streak alive.
-                                    </p>
-                                </div>
-
-                                <div className="mt-5 grid grid-cols-2 gap-4">
-                                    <div className="rounded-2xl bg-indigo-500/15 p-4">
-                                        <p className="text-2xl">🧠</p>
-                                        <p className="mt-3 font-bold">AI Tutor</p>
-                                        <p className="mt-1 text-xs leading-5 text-slate-400">Learn with guided support.</p>
-                                    </div>
-                                    <div className="rounded-2xl bg-cyan-400/10 p-4">
-                                        <p className="text-2xl">🏆</p>
-                                        <p className="mt-3 font-bold">Trivia Zone</p>
-                                        <p className="mt-1 text-xs leading-5 text-slate-400">Build knowledge through play.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="absolute -bottom-7 -left-6 hidden rounded-2xl border border-white/10 bg-slate-900/90 px-5 py-4 shadow-xl backdrop-blur sm:block">
-                            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Learning streak</p>
-                            <p className="mt-1 text-2xl font-black text-cyan-200">7 days 🔥</p>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="features" className="relative z-10 border-y border-white/5 bg-slate-900/40">
-                    <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
-                        <div className="max-w-2xl">
-                            <p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Built for growth</p>
-                            <h2 className="mt-3 text-3xl font-black sm:text-4xl">
-                                Everything learners need in one place.
-                            </h2>
-                        </div>
-
-                        <div className="mt-12 grid gap-5 md:grid-cols-3">
-                            {features.map((feature) => (
-                                <article
-                                    key={feature.title}
-                                    className="rounded-2xl border border-slate-800 bg-slate-950/50 p-7 transition hover:-translate-y-1 hover:border-cyan-300/40"
+                        <div className="lg-grid">
+                            {niches.map((niche) => (
+                                <button
+                                    type="button"
+                                    key={niche.title}
+                                    className={`lg-niche ${selectedNiche === niche.title ? "selected" : ""}`}
+                                    onClick={() => setSelectedNiche(niche.title)}
                                 >
-                                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-cyan-300/10 text-xl text-cyan-200">
-                                        {feature.icon}
+                                    <div className="lg-niche-top">
+                                        <div className="lg-niche-icon">{niche.icon}</div>
+                                        {selectedNiche === niche.title ? <span>✓</span> : null}
                                     </div>
-                                    <h3 className="mt-6 text-xl font-bold">{feature.title}</h3>
-                                    <p className="mt-3 leading-7 text-slate-400">{feature.text}</p>
-                                </article>
+                                    <div className="lg-niche-title">{niche.title}</div>
+                                    <p className="lg-niche-text">{niche.description}</p>
+                                </button>
                             ))}
                         </div>
-                    </div>
-                </section>
 
-                <section id="paths" className="relative z-10 mx-auto max-w-7xl px-6 py-20 lg:px-8">
-                    <div className="rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900 to-slate-950 p-8 sm:p-12">
-                        <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
-                            <div>
-                                <p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Your learning journey</p>
-                                <h2 className="mt-3 max-w-2xl text-3xl font-black sm:text-4xl">
-                                    A learning path for every stage.
-                                </h2>
-                                <p className="mt-4 max-w-xl leading-7 text-slate-400">
-                                    Start where you are, build confidence, and unlock new skills as you progress.
-                                </p>
-                            </div>
+                        <div className="lg-action-area">
+                            <p className="lg-selected-label">
+                                {selectedNiche
+                                    ? `${selectedNiche} selected`
+                                    : "Choose a niche to unlock your trivia challenge"}
+                            </p>
 
                             <Link
-                                href="/register"
-                                className="rounded-xl border border-cyan-300/50 px-5 py-3 text-center font-bold text-cyan-200 transition hover:bg-cyan-300 hover:text-slate-950"
+                                href={selectedNiche ? "/register" : "#trivia"}
+                                className={`lg-start ${selectedNiche ? "" : "disabled"}`}
                             >
-                                Create your account
+                                Start Trivia <span>→</span>
                             </Link>
                         </div>
+                    </section>
 
-                        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                            {learningPaths.map((path, index) => (
-                                <div
-                                    key={path}
-                                    className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5"
-                                >
-                                    <p className="text-sm font-bold text-cyan-300">0{index + 1}</p>
-                                    <p className="mt-5 text-lg font-bold">{path}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                <footer className="relative z-10 border-t border-white/5 px-6 py-8 text-center text-sm text-slate-500">
-                    © {new Date().getFullYear()} Little Genius. Learn. Play. Grow.
-                </footer>
-            </main>
+                    <p className="lg-footer">
+                        Learn, play, and grow through challenges designed for every learner.
+                    </p>
+                </main>
+            </div>
         </>
     );
 }
