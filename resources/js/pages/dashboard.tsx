@@ -7,7 +7,7 @@ const quickActions = [
         icon: "✦",
         title: "Start Trivia",
         text: "Test your knowledge and earn progress.",
-        href: "/",
+        href: "/trivia",
         accent: "purple",
     },
     {
@@ -593,7 +593,7 @@ export default function Dashboard() {
                                 <small>DAILY MISSION</small>
                                 <h3>Complete one trivia challenge.</h3>
                                 <p>Earn progress, grow your streak, and unlock more learning opportunities.</p>
-                                <Link href="/" className="lg-mission-link">
+                                <Link href="/trivia" className="lg-mission-link">
                                     Start mission →
                                 </Link>
                             </section>
@@ -604,5 +604,6 @@ export default function Dashboard() {
         </>
     );
 }
+
 
 

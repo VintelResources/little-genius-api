@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Teams\TeamInvitationController;
@@ -19,3 +19,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 require __DIR__.'/settings.php';
+
+Route::get('/trivia', function () {
+    return Inertia\Inertia::render('trivia');
+})->middleware(['auth'])->name('trivia');
