@@ -1,4 +1,6 @@
 ﻿import { Head, Link } from "@inertiajs/react";
+import { useEffect, useState } from "react";
+import WalletGate from "@/components/wallet-gate";
 
 const quickActions = [
     {
@@ -31,6 +33,23 @@ const progressItems = [
 ];
 
 export default function Dashboard() {
+    const [walletAddress, setWalletAddress] = useState<string | null>(null);
+
+    useEffect(() => {
+        const storedWallet = window.localStorage.getItem("little-genius-wallet");
+        if (storedWallet) {
+            setWalletAddress(storedWallet);
+        }
+    }, []);
+
+    const handleWalletConnected = (address: string) => {
+        window.localStorage.setItem("little-genius-wallet", address);
+        setWalletAddress(address);
+    };
+
+    if (!walletAddress) {
+        return <WalletGate onConnected={handleWalletConnected} />;
+    }
     return (
         <>
             <Head title="Dashboard | Little Genius" />
@@ -480,7 +499,7 @@ export default function Dashboard() {
                             <small>BALANCE</small>
                             <strong>0.000 G</strong>
                         </div>
-                        <div className="lg-avatar">LG</div>
+                        <div className="lg-avatar">{walletAddress.slice(2, 4).toUpperCase()}</div>
                     </div>
                 </header>
 
@@ -585,3 +604,5 @@ export default function Dashboard() {
         </>
     );
 }
+
+
